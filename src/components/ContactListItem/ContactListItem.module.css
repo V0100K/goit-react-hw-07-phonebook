@@ -10,3 +10,7 @@
 .contact {
   margin: 0;
 }
+.buttonDelete{
+  background-color: #f16262;
+  border-radius: 10px;
+}

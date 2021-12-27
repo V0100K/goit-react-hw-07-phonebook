@@ -9,7 +9,7 @@ const Filter = () => {
     const filter = useSelector(getFilter);
     const dispatch = useDispatch();
     const changeFilter = e => {
-        return dispatch(filterContact(e.target.value));
+        return dispatch(filterContact(e.currentTarget.value));
     };
 
     return (

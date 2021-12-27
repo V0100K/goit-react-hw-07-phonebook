@@ -75,34 +75,28 @@ import { getContacts } from '../../redux/contacts/contactsSelectors';
 // export default ContactForm;
 
 const ContactForm = () => {
-    const distatch = useDispatch();
+    const dispatch = useDispatch();
     const contacts = useSelector(getContacts);
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
 
-    const handleChange = e => {
-        const { name, value } = e.target;
-        switch (name) {
-            case 'name':
-                setName(value);
-                return;
+    // const handleChange = e => {
+    //     const { name, value } = e.target;
+    //     switch (name) {
+    //         case 'name':
+    //             setName(value);
+    //             return;
+    //
+    //         case 'number':
+    //             setNumber(value);
+    //             return;
+    //
+    //         default:
+    //             return;
+    //     }
+    // };
 
-            case 'number':
-                setNumber(value);
-                return;
 
-            default:
-                return;
-        }
-    };
-
-    const findByName = contactName => {
-        return contacts.some(({ name }) => name === contactName);
-    };
-
-    const findByNumber = contactNumber => {
-        return contacts.some(({ number }) => number === contactNumber);
-    };
 
     const reset = () => {
         setName('');
@@ -111,13 +105,18 @@ const ContactForm = () => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        if (findByName(name) && findByNumber(number)) {
-            alert(`${name} is already in contacts!`);
+        if (
+            contacts.some((item) => {
+                return item.name.toLowerCase() === name.toLowerCase();
+            })
+        ) {
+            alert(`${name} is already in contacts`);
+
         }
         else {
-            distatch(addContact({ name, number }));
+            dispatch(addContact({ name, number }));
+            reset();
         }
-        reset();
     };
 
     return (
@@ -128,10 +127,12 @@ const ContactForm = () => {
                     type="text"
                     name="name"
                     pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                    title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+                    title="Имя может состоять только из букв, апострофа, тире и пробелов."
                     required
                     value={name}
-                    onChange={handleChange}
+                    onChange={e => {
+                        setName(e.currentTarget.value);
+                    }}
                 />
             </label>
             <label>
@@ -140,10 +141,12 @@ const ContactForm = () => {
                     type="tel"
                     name="number"
                     pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                    title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+                    title="Номер телефона может содержать цифры, пробелы, тире, круглые скобки и может начинаться с +"
                     required
                     value={number}
-                    onChange={handleChange}
+                    onChange={e => {
+                        setNumber(e.currentTarget.value);
+                    }}
                 />
             </label>
 
